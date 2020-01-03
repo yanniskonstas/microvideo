@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
 
 //video
 app.get('/video', (req, res) => {
-    const path = "videos/SampleVideo_1280x720_1mb.mp4";
+    const path = "./videos/SampleVideo_1280x720_1mb.mp4";
     fs.stat(path, (err, stats) => {
         if (err) {
             console.error("An error occured");
@@ -48,9 +48,15 @@ app.get("/videos", (req, res) => {
     });
 });
 
+/* 
 https.createServer({
     key: fs.readFileSync('server.key'),
     cert: fs.readFileSync('server.cert')
 }, app).listen(port, () => {
     console.log(`Microservice listening on port ${port}, point your browser at https://localhost:3000/video`);
+});
+*/
+
+app.listen(port, () => {
+    console.log(`Microservice listening on port ${port}, point your browser at http://localhost:3000/video`);
 });
