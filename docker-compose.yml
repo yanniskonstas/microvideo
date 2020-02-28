@@ -1,0 +1,41 @@
+version: '3'
+services:    
+    db:
+        image: mongo:4.2.0
+        container_name: db
+        ports:
+            - "4000:27017"
+        expose:
+            - "27017"
+        restart: always
+
+    azure-storage:
+        image: azure-storage:ver1
+        #image: konstasmicroservices.azurecr.io/azure-storage:ver1
+        build: 
+            context: ../azure-storage
+            dockerfile: Dockerfile
+        container_name: video-storage
+        ports:
+            - "4001:3000"
+        environment:
+            - IMAGE_STORAGE_ACCOUNT_NAME=konstasstorage
+            - IMAGE_STORAGE_ACCESS_KEY=G2vIWxfyVm0BN+N90j01wxQGFZiS9ub6OtSu96Bw+WGDwYUPqkNqcfh0yu/aHsuuxnmrFEh7N0szGvLC0AEgUQ==
+        restart: always
+
+    microvideo:
+        image: microvideo:ver1
+        #image: konstasmicroservices.azurecr.io/microvideo:ver1
+        build: 
+            context: .
+            dockerfile: Dockerfile
+        container_name: microvideo
+        ports:
+            - "4002:3000"
+        environment:
+            - VIDEOS=./videos
+            - VIDEO_STORAGE_HOST=video-storage
+            - VIDEO_STORAGE_PORT=3000
+            - DBHOST=mongodb://db:27017
+            - DBNAME=video-streaming
+        restart: always
